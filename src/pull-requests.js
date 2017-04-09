@@ -4,7 +4,7 @@ const fetch = require('isomorphic-fetch');
 const parseLinkHeader = require('parse-link-header');
 const doUntil = require('async.dountil');
 
-function getLastMergedPullRequests(user, token, org, repo, limit = 100, apiBase = 'api.github.com') {
+function getLastMergedPullRequests(user, token, org, repo, limit = 100, apiBase) {
     return new Promise((resolve, reject) => {
         let mergedPullRequests = [],
             nextPage = `https://${apiBase}/repos/${org}/${repo}/pulls?state=closed&sort=updated&direction=desc`;
@@ -36,9 +36,6 @@ function getLastMergedPullRequests(user, token, org, repo, limit = 100, apiBase 
     });
 }
 
-exports.handler = function (user, token, org, repo) {
-    return getLastMergedPullRequests(user, token, org, repo)
-        .then((pullRequests) => {
-            return pullRequests;
-        });
+exports.handler = function (user, token, org, repo, apiBase) {
+    return getLastMergedPullRequests(user, token, org, repo, 100, apiBase);
 };
